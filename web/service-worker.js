@@ -1,4 +1,4 @@
-const CACHE = "shasthopath-v5";
+const CACHE = "shasthopath-v6";
 const CORE = [
   "./", "index.html", "styles.css", "app.js", "manifest.webmanifest",
   "icon.svg", "tile-fallback.svg", "vendor/leaflet/leaflet.css",
@@ -17,6 +17,7 @@ self.addEventListener("activate", event => event.waitUntil(Promise.all([
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
+  if (new URL(event.request.url).pathname.startsWith("/api/")) return;
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
     if (response.ok || response.type === "opaque") {
       const copy = response.clone();

@@ -35,6 +35,12 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertNotIn("unpkg.com/leaflet", html)
         self.assertGreater((ROOT / "web" / "vendor" / "leaflet" / "leaflet.css").stat().st_size, 10_000)
 
+    def test_admin_dashboard_assets_exist(self):
+        for name in ("admin.html", "admin.css", "admin.js"):
+            self.assertGreater((ROOT / "web" / name).stat().st_size, 100)
+        self.assertIn("/api/admin/reports", (ROOT / "web" / "admin.js").read_text())
+        self.assertIn('pathname.startsWith("/api/")', (ROOT / "web" / "service-worker.js").read_text())
+
 
 if __name__ == "__main__":
     unittest.main()

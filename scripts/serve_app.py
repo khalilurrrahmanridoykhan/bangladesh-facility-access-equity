@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import hmac
 import json
+import os
 import threading
 import time
 import uuid
@@ -19,11 +21,14 @@ ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 ALLOWED_ISSUES = {"location", "closed", "name", "other"}
 ALLOWED_DISTRICTS = {"Dhaka", "Bandarban"}
+ALLOWED_STATUSES = {"new", "investigating", "accepted", "rejected", "resolved"}
 MAX_BODY_BYTES = 16_384
 
 
 class AppHandler(SimpleHTTPRequestHandler):
     report_file = ROOT / "data" / "reports" / "facility-reports.ndjson"
+    status_file = ROOT / "data" / "reports" / "facility-report-status.ndjson"
+    admin_token = os.environ.get("SHASTHOPATH_ADMIN_TOKEN", "")
     write_lock = threading.Lock()
     requests_by_client: dict[str, deque[float]] = defaultdict(deque)
 
@@ -45,8 +50,14 @@ class AppHandler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
-        if urlparse(self.path).path == "/api/health":
+        path = urlparse(self.path).path
+        if path == "/api/health":
             self.send_json(HTTPStatus.OK, {"status": "ok", "service": "shasthopath-feedback"})
+            return
+        if path == "/api/admin/reports":
+            if not self.require_admin():
+                return
+            self.send_json(HTTPStatus.OK, {"reports": self.load_reports()})
             return
         super().do_GET()
 
@@ -74,6 +85,69 @@ class AppHandler(SimpleHTTPRequestHandler):
         with self.write_lock, self.report_file.open("a", encoding="utf-8") as output:
             output.write(json.dumps(report, ensure_ascii=False, separators=(",", ":")) + "\n")
         self.send_json(HTTPStatus.CREATED, {"id": report["id"], "status": report["status"]})
+
+    def do_PATCH(self):
+        path = urlparse(self.path).path
+        prefix = "/api/admin/reports/"
+        if not path.startswith(prefix):
+            self.send_json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
+            return
+        if not self.require_admin():
+            return
+        report_id = path[len(prefix):]
+        reports = {report["id"]: report for report in self.load_reports()}
+        if report_id not in reports:
+            self.send_json(HTTPStatus.NOT_FOUND, {"error": "report_not_found"})
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+            if length <= 0 or length > MAX_BODY_BYTES:
+                raise ValueError("invalid body size")
+            payload = json.loads(self.rfile.read(length))
+            status = payload.get("status")
+            note = str(payload.get("review_note", "")).strip()
+            if status not in ALLOWED_STATUSES:
+                raise ValueError("unsupported status")
+            if len(note) > 500:
+                raise ValueError("review note is too long")
+        except (json.JSONDecodeError, TypeError, ValueError) as error:
+            self.send_json(HTTPStatus.BAD_REQUEST, {"error": "invalid_review", "detail": str(error)})
+            return
+        event = {
+            "report_id": report_id, "status": status, "review_note": note,
+            "changed_at": datetime.now(timezone.utc).isoformat(),
+        }
+        self.status_file.parent.mkdir(parents=True, exist_ok=True)
+        with self.write_lock, self.status_file.open("a", encoding="utf-8") as output:
+            output.write(json.dumps(event, ensure_ascii=False, separators=(",", ":")) + "\n")
+        self.send_json(HTTPStatus.OK, event)
+
+    def require_admin(self) -> bool:
+        if not self.admin_token:
+            self.send_json(HTTPStatus.SERVICE_UNAVAILABLE, {"error": "admin_not_configured"})
+            return False
+        authorization = self.headers.get("Authorization", "")
+        supplied = authorization.removeprefix("Bearer ") if authorization.startswith("Bearer ") else ""
+        if not hmac.compare_digest(supplied, self.admin_token):
+            self.send_json(HTTPStatus.UNAUTHORIZED, {"error": "unauthorized"})
+            return False
+        return True
+
+    def load_reports(self) -> list[dict]:
+        reports = []
+        if self.report_file.exists():
+            reports = [json.loads(line) for line in self.report_file.read_text(encoding="utf-8").splitlines() if line.strip()]
+        latest_status = {}
+        if self.status_file.exists():
+            for line in self.status_file.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    event = json.loads(line)
+                    latest_status[event["report_id"]] = event
+        for report in reports:
+            event = latest_status.get(report["id"])
+            if event:
+                report.update({"status": event["status"], "review_note": event["review_note"], "status_changed_at": event["changed_at"]})
+        return sorted(reports, key=lambda report: report["received_at"], reverse=True)
 
     def within_rate_limit(self) -> bool:
         key = self.client_address[0]
@@ -121,11 +195,14 @@ def main() -> None:
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8080)
     parser.add_argument("--report-file", type=Path, default=AppHandler.report_file)
+    parser.add_argument("--status-file", type=Path, default=AppHandler.status_file)
     args = parser.parse_args()
     AppHandler.report_file = args.report_file
+    AppHandler.status_file = args.status_file
     server = ThreadingHTTPServer((args.host, args.port), AppHandler)
     print(f"ShasthoPath running at http://{args.host}:{args.port}")
     print(f"Facility reports: {args.report_file}")
+    print("Admin review: enabled at /admin.html" if AppHandler.admin_token else "Admin review: disabled; set SHASTHOPATH_ADMIN_TOKEN")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

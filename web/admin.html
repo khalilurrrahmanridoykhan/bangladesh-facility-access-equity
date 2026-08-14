@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow"><link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="admin.css"><title>ShasthoPath report review</title>
+</head>
+<body>
+  <header><div><span class="brand">✚</span><div><strong>ShasthoPath</strong><small>Facility report review</small></div></div><a href="/">Public map</a></header>
+  <main>
+    <section id="login" class="panel">
+      <p class="eyebrow">Protected administration</p><h1>Review facility corrections</h1>
+      <p>Enter the administrator token configured on the server. The token remains in this browser tab only.</p>
+      <form id="loginForm"><label for="token">Administrator token</label><div class="login-row"><input id="token" type="password" required autocomplete="current-password"><button>Open dashboard</button></div></form>
+      <p id="loginError" class="error" role="alert"></p>
+    </section>
+    <section id="dashboard" hidden>
+      <div class="toolbar"><div><p class="eyebrow">Correction queue</p><h1>Facility reports</h1></div><button id="logout" class="secondary">Lock dashboard</button></div>
+      <div class="filters"><label>Status <select id="statusFilter"><option value="">All</option><option>new</option><option>investigating</option><option>accepted</option><option>rejected</option><option>resolved</option></select></label><button id="refresh" class="secondary">Refresh</button><span id="count"></span></div>
+      <p id="dashboardError" class="error" role="alert"></p><div id="reports" class="reports"></div>
+    </section>
+  </main>
+  <template id="reportTemplate"><article class="report"><div class="report-heading"><div><span class="status"></span><h2 class="facility"></h2><p class="meta"></p></div><a class="map-link" target="_blank" rel="noopener">View map</a></div><dl><div><dt>Reported issue</dt><dd class="issue"></dd></div><div><dt>Public note</dt><dd class="note"></dd></div><div><dt>Received</dt><dd class="received"></dd></div></dl><form class="review-form"><label>Review status<select class="review-status"><option>new</option><option>investigating</option><option>accepted</option><option>rejected</option><option>resolved</option></select></label><label>Internal review note<textarea class="review-note" maxlength="500" rows="2"></textarea></label><button>Save decision</button><span class="save-state" role="status"></span></form></article></template>
+  <script src="admin.js" defer></script>
+</body>
+</html>

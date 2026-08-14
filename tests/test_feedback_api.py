@@ -17,7 +17,10 @@ class FeedbackApiTests(unittest.TestCase):
     def setUpClass(cls):
         cls.temporary = tempfile.TemporaryDirectory()
         cls.report_file = Path(cls.temporary.name) / "reports.ndjson"
+        cls.status_file = Path(cls.temporary.name) / "status.ndjson"
         AppHandler.report_file = cls.report_file
+        AppHandler.status_file = cls.status_file
+        AppHandler.admin_token = "test-admin-token"
         AppHandler.requests_by_client.clear()
         cls.server = ThreadingHTTPServer(("127.0.0.1", 0), AppHandler)
         cls.thread = threading.Thread(target=cls.server.serve_forever, daemon=True)
@@ -42,6 +45,33 @@ class FeedbackApiTests(unittest.TestCase):
     def test_health_endpoint(self):
         with urlopen(self.base_url + "/api/health") as response:
             self.assertEqual(json.load(response)["status"], "ok")
+
+    def test_admin_requires_token_and_records_status_audit(self):
+        payload = {
+            "facility": {"district": "Bandarban", "facility": [92.2, 22.1, "Review Hospital", "hospital"]},
+            "issue": "closed", "note": "The facility appeared closed during a visit.",
+        }
+        _, created = self.post(payload)
+        with self.assertRaises(HTTPError) as unauthorized:
+            urlopen(self.base_url + "/api/admin/reports")
+        self.assertEqual(unauthorized.exception.code, 401)
+
+        headers = {"Authorization": "Bearer test-admin-token"}
+        with urlopen(Request(self.base_url + "/api/admin/reports", headers=headers)) as response:
+            reports = json.load(response)["reports"]
+        self.assertTrue(any(report["id"] == created["id"] for report in reports))
+
+        review = Request(
+            self.base_url + f"/api/admin/reports/{created['id']}",
+            data=json.dumps({"status": "investigating", "review_note": "Checking with district office."}).encode(),
+            headers={**headers, "Content-Type": "application/json"}, method="PATCH",
+        )
+        with urlopen(review) as response:
+            result = json.load(response)
+        self.assertEqual(result["status"], "investigating")
+        audit = json.loads(self.status_file.read_text().splitlines()[-1])
+        self.assertEqual(audit["report_id"], created["id"])
+        self.assertEqual(audit["status"], "investigating")
 
     def test_valid_report_is_persisted_without_client_address(self):
         payload = {
