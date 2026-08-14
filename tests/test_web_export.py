@@ -25,6 +25,21 @@ class PublicWebDataTests(unittest.TestCase):
             self.assertTrue(district["name_bn"])
             self.assertTrue((ROOT / "web" / "data" / f"{district['slug']}.json").exists())
 
+    def test_national_overview_has_all_district_geometries(self):
+        path = ROOT / "web" / "data" / "national.json"
+        payload = json.loads(path.read_text())
+        self.assertEqual(payload["schema"], "facility-access-national-v1")
+        self.assertEqual(payload["summary"]["districts"], 64)
+        self.assertEqual(len(payload["districts"]["features"]), 64)
+        self.assertLess(path.stat().st_size, 5_000_000)
+        self.assertTrue(all(feature["properties"]["name_bn"] for feature in payload["districts"]["features"]))
+
+    def test_public_app_defaults_to_clickable_national_overview(self):
+        javascript = (ROOT / "web" / "app.js").read_text()
+        self.assertIn('district.value="national"', javascript)
+        self.assertIn('facility-access-national-v1', javascript)
+        self.assertIn('window.selectDistrict=setDistrict', javascript)
+
     def test_pwa_core_assets_exist(self):
         for name in ("index.html", "app.js", "styles.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)

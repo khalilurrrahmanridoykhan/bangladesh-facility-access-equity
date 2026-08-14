@@ -1,8 +1,8 @@
-const CACHE = "shasthopath-v7";
+const CACHE = "shasthopath-v8";
 const CORE = [
   "./", "index.html", "styles.css", "app.js", "manifest.webmanifest",
   "icon.svg", "tile-fallback.svg", "vendor/leaflet/leaflet.css",
-  "vendor/leaflet/leaflet.js", "data/catalog.json", "data/dhaka.json", "data/bandarban.json"
+  "vendor/leaflet/leaflet.js", "data/catalog.json", "data/national.json", "data/dhaka.json", "data/bandarban.json"
 ];
 
 self.addEventListener("install", event => {

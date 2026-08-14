@@ -8,10 +8,11 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from shapely.geometry import mapping, shape
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from run_pilot import facilities_near, load_district, slugify
+from run_pilot import facilities_near, load_boundaries, load_district, slugify
 
 DISTRICT_NAMES_BN = {
     "Bagerhat": "বাগেরহাট", "Bandarban": "বান্দরবান", "Barguna": "বরগুনা", "Barisal": "বরিশাল",
@@ -98,9 +99,27 @@ if __name__ == "__main__":
     total_population = sum(item["population"] for item in catalog)
     total_over = sum(item["population_over_threshold"] for item in catalog)
     national = {
+        "slug": "national", "name": "Bangladesh overview", "name_bn": "বাংলাদেশ সারসংক্ষেপ",
         "districts": len(catalog), "estimated_population": total_population,
         "population_over_threshold": total_over,
         "percent_over_threshold": round(100 * total_over / total_population, 3) if total_population else None,
     }
     destination.write_text(json.dumps({"national": national, "districts": catalog}, ensure_ascii=False, separators=(",", ":")) + "\n")
     print(f"Wrote {destination.relative_to(ROOT)} with {len(catalog)} districts")
+
+    by_name = {item["name"]: item for item in catalog}
+    features = []
+    for feature in load_boundaries()["features"]:
+        name = feature["properties"]["shapeName"]
+        if name not in by_name:
+            continue
+        item = by_name[name]
+        geometry = shape(feature["geometry"]).simplify(0.005, preserve_topology=True)
+        features.append({
+            "type": "Feature", "geometry": mapping(geometry),
+            "properties": {key: item[key] for key in ("slug", "name", "name_bn", "population", "population_over_threshold", "percent_over_threshold", "facilities")},
+        })
+    overview = {"schema": "facility-access-national-v1", "summary": national, "districts": {"type": "FeatureCollection", "features": features}}
+    national_path = ROOT / "web" / "data" / "national.json"
+    national_path.write_text(json.dumps(overview, ensure_ascii=False, separators=(",", ":")) + "\n")
+    print(f"Wrote {national_path.relative_to(ROOT)} ({national_path.stat().st_size:,} bytes)")
