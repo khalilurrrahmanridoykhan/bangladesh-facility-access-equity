@@ -11,3 +11,6 @@ outputs/*
 *.osrm*
 __pycache__/
 .DS_Store
+*.jks
+*.keystore
+android/key.properties
