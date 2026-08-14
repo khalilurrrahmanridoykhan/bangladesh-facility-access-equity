@@ -1,0 +1,6 @@
+geopandas>=1.1
+rasterio>=1.5
+shapely>=2.1
+requests>=2.32
+pandas>=2.2
+pytest>=8.0
