@@ -1,4 +1,4 @@
-const CACHE = "shasthopath-v9";
+const CACHE = "shasthopath-v10";
 const CORE = [
   "./", "index.html", "styles.css", "directory.css", "app.js", "manifest.webmanifest",
   "icon.svg", "tile-fallback.svg", "vendor/leaflet/leaflet.css",
@@ -17,9 +17,10 @@ self.addEventListener("activate", event => event.waitUntil(Promise.all([
 
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
-  if (new URL(event.request.url).pathname.startsWith("/api/")) return;
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.pathname.startsWith("/api/")) return;
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-    if (response.ok || response.type === "opaque") {
+    if (!requestUrl.hostname.endsWith("basemaps.cartocdn.com") && (response.ok || response.type === "opaque")) {
       const copy = response.clone();
       caches.open(CACHE).then(cache => cache.put(event.request, copy));
     }

@@ -49,6 +49,16 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn('url.searchParams.set("facility",index)', javascript)
         self.assertIn("navigator.share", javascript)
 
+    def test_district_data_and_tiles_can_be_saved_offline(self):
+        html = (ROOT / "web" / "index.html").read_text()
+        javascript = (ROOT / "web" / "app.js").read_text()
+        service_worker = (ROOT / "web" / "service-worker.js").read_text()
+        self.assertIn('id="offlineDownload"', html)
+        self.assertIn('OFFLINE_CACHE="shasthopath-districts-v1"', javascript)
+        self.assertIn("for(let zoom=8;zoom<=11;zoom++)", javascript)
+        self.assertIn("cacheOfflineDistrict", javascript)
+        self.assertIn('hostname.endsWith("basemaps.cartocdn.com")', service_worker)
+
     def test_pwa_core_assets_exist(self):
         for name in ("index.html", "app.js", "styles.css", "directory.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)

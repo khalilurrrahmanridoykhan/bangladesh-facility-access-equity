@@ -38,6 +38,8 @@ Open `http://localhost:8080`. The same responsive app works in a mobile browser 
 
 Select a district to browse facilities ordered by proximity to the map centre, filter by facility type, or search by name. Choosing a result focuses its map marker; the share action creates a deep link that reopens the same district and facility. Using current location reorders the directory by straight-line proximity and does not store location history.
 
+The district view also provides an explicit offline download. It stores the district data and a bounded set of overview map tiles (zoom levels 8–11) in the browser. The same control removes that district's downloaded copy. Detailed directions still open an external service and require connectivity.
+
 If an older local version is already open, reload once after restarting the server. The service worker will replace its old application cache automatically.
 
 Facility-error reports are validated by the local API and appended to `data/reports/facility-reports.ndjson`. When offline, the PWA queues reports on the device and synchronizes them after connectivity returns. Do not expose this development server directly to the internet; production deployment still requires HTTPS, authentication for the review interface, durable storage, and infrastructure-level rate limiting.

@@ -66,3 +66,20 @@
   padding: 0;
   text-decoration: underline;
 }
+
+#offlineControls {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+#offlineDownload {
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+#offlineStatus {
+  color: #526d70;
+  line-height: 1.3;
+}
