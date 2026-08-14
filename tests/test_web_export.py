@@ -16,6 +16,15 @@ class PublicWebDataTests(unittest.TestCase):
             self.assertEqual(len(payload["facility_fields"]), len(payload["facilities"][0]))
             self.assertEqual(payload["summary"]["district"].casefold(), district)
 
+    def test_national_catalog_has_all_districts_and_data_files(self):
+        catalog = json.loads((ROOT / "web" / "data" / "catalog.json").read_text())
+        self.assertEqual(catalog["national"]["districts"], 64)
+        self.assertEqual(len(catalog["districts"]), 64)
+        self.assertGreater(catalog["national"]["population_over_threshold"], 0)
+        for district in catalog["districts"]:
+            self.assertTrue(district["name_bn"])
+            self.assertTrue((ROOT / "web" / "data" / f"{district['slug']}.json").exists())
+
     def test_pwa_core_assets_exist(self):
         for name in ("index.html", "app.js", "styles.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)

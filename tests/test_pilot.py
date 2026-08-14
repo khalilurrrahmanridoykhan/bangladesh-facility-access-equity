@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from run_pilot import load_district, population_cells, facilities_near
+from run_pilot import load_district, population_cells, facilities_near, slugify
 
 
 class PilotInputTests(unittest.TestCase):
@@ -18,6 +18,9 @@ class PilotInputTests(unittest.TestCase):
     def test_unknown_district_is_rejected(self):
         with self.assertRaises(ValueError):
             load_district("Not a district")
+
+    def test_district_slug_is_url_safe(self):
+        self.assertEqual(slugify("Cox's Bazar"), "cox-s-bazar")
 
 
 if __name__ == "__main__":

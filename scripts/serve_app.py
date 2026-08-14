@@ -20,7 +20,6 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 WEB = ROOT / "web"
 ALLOWED_ISSUES = {"location", "closed", "name", "other"}
-ALLOWED_DISTRICTS = {"Dhaka", "Bandarban"}
 ALLOWED_STATUSES = {"new", "investigating", "accepted", "rejected", "resolved"}
 MAX_BODY_BYTES = 16_384
 
@@ -161,7 +160,15 @@ class AppHandler(SimpleHTTPRequestHandler):
         return True
 
     @staticmethod
-    def validate_report(payload: dict) -> dict:
+    def allowed_districts() -> set[str]:
+        catalog_path = WEB / "data" / "catalog.json"
+        if not catalog_path.exists():
+            return set()
+        catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+        return {district["name"] for district in catalog.get("districts", [])}
+
+    @classmethod
+    def validate_report(cls, payload: dict) -> dict:
         facility_wrapper = payload.get("facility")
         if not isinstance(facility_wrapper, dict):
             raise ValueError("facility must be an object")
@@ -169,7 +176,7 @@ class AppHandler(SimpleHTTPRequestHandler):
         facility = facility_wrapper.get("facility")
         issue = payload.get("issue")
         note = str(payload.get("note", "")).strip()
-        if district not in ALLOWED_DISTRICTS:
+        if district not in cls.allowed_districts():
             raise ValueError("unsupported district")
         if not isinstance(facility, list) or len(facility) != 4:
             raise ValueError("facility must contain longitude, latitude, name and type")

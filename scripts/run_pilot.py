@@ -7,7 +7,9 @@ import argparse
 import csv
 import json
 import math
+import re
 from pathlib import Path
+from functools import lru_cache
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -23,8 +25,22 @@ OUTPUTS = ROOT / "outputs"
 EXCLUDED_AMENITIES = {"pharmacy", "dentist", "doctors", "optician"}
 
 
+def slugify(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", name.casefold()).strip("-")
+
+
+@lru_cache(maxsize=1)
+def load_boundaries():
+    return json.loads((RAW / "geoBoundaries-BGD-ADM2.geojson").read_text())
+
+
+@lru_cache(maxsize=1)
+def load_healthsites():
+    return json.loads((RAW / "bangladesh_healthsites.geojson").read_text())
+
+
 def load_district(name: str):
-    data = json.loads((RAW / "geoBoundaries-BGD-ADM2.geojson").read_text())
+    data = load_boundaries()
     matches = [f for f in data["features"] if f["properties"]["shapeName"].casefold() == name.casefold()]
     if len(matches) != 1:
         available = ", ".join(sorted(f["properties"]["shapeName"] for f in data["features"]))
@@ -46,7 +62,7 @@ def population_cells(district_geometry) -> list[dict]:
 
 
 def facilities_near(district_geometry, buffer_degrees: float) -> list[dict]:
-    data = json.loads((RAW / "bangladesh_healthsites.geojson").read_text())
+    data = load_healthsites()
     search_area = prep(district_geometry.buffer(buffer_degrees))
     facilities = []
     for feature in data["features"]:
@@ -141,7 +157,7 @@ def compute_access(cells, facilities, osrm_url: str, source_batch: int, destinat
 
 def write_outputs(district_feature, district_name: str, cells: list[dict], facilities: list[dict], threshold: float, max_snap_distance: float, walking_speed_kmh: float):
     OUTPUTS.mkdir(parents=True, exist_ok=True)
-    slug = district_name.casefold().replace(" ", "-")
+    slug = slugify(district_name)
     for cell in cells:
         duration = cell["total_access_time_minutes"]
         cell["over_threshold"] = duration is not None and duration > threshold

@@ -23,6 +23,8 @@ make pilot
 
 The pilot writes GeoJSON, CSV, a PNG map, and a JSON summary into `outputs/`.
 
+For the resumable 64-district analysis, keep OSRM running and use `make national`. Completed district CSV and summary pairs are skipped automatically. Run `make web-data` afterward to rebuild the public district catalog.
+
 ## Public web/mobile pilot
 
 Generate the compact public datasets and serve the installable PWA:

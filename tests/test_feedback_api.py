@@ -92,6 +92,14 @@ class FeedbackApiTests(unittest.TestCase):
             self.post(payload)
         self.assertEqual(caught.exception.code, 400)
 
+    def test_national_catalog_district_is_accepted(self):
+        payload = {
+            "facility": {"district": "Rangamati", "facility": [92.2, 22.7, "Hill Hospital", "hospital"]},
+            "issue": "name", "note": "Facility name needs local verification.",
+        }
+        status, _ = self.post(payload)
+        self.assertEqual(status, 201)
+
 
 if __name__ == "__main__":
     unittest.main()
