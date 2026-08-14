@@ -28,10 +28,10 @@ npm run android:sync
 (cd android && ./gradlew assembleRelease)
 
 install -d web/downloads data/reports
-install -m 0644 android/app/build/outputs/apk/release/app-release.apk web/downloads/shasthopath-1.1.1.apk
-(cd web/downloads && sha256sum shasthopath-1.1.1.apk > shasthopath-1.1.1.apk.sha256)
-APK_SHA256="$(sha256sum web/downloads/shasthopath-1.1.1.apk | awk '{print $1}')"
-printf '{\n  "version": "1.1.1",\n  "version_code": 3,\n  "apk_url": "https://shasthopath.krrkhan.com/downloads/shasthopath-1.1.1.apk",\n  "sha256": "%s"\n}\n' "$APK_SHA256" > web/app-version.json
+install -m 0644 android/app/build/outputs/apk/release/app-release.apk web/downloads/shasthopath-1.1.2.apk
+(cd web/downloads && sha256sum shasthopath-1.1.2.apk > shasthopath-1.1.2.apk.sha256)
+APK_SHA256="$(sha256sum web/downloads/shasthopath-1.1.2.apk | awk '{print $1}')"
+printf '{\n  "version": "1.1.2",\n  "version_code": 4,\n  "apk_url": "https://shasthopath.krrkhan.com/downloads/shasthopath-1.1.2.apk",\n  "sha256": "%s"\n}\n' "$APK_SHA256" > web/app-version.json
 
 sudo chown -R 10001:10001 data/reports
 sudo docker compose -f deploy/compose.production.yml build

@@ -66,7 +66,7 @@ class PublicWebDataTests(unittest.TestCase):
     def test_android_download_page_and_live_api_bridge_exist(self):
         download = (ROOT / "web" / "download.html").read_text()
         javascript = (ROOT / "web" / "app.js").read_text()
-        self.assertIn("downloads/shasthopath-1.1.1.apk", download)
+        self.assertIn("downloads/shasthopath-1.1.2.apk", download)
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
 
     def test_mobile_navigation_and_native_location_are_present(self):
@@ -80,7 +80,11 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("nativeGeolocation", javascript)
         self.assertIn("requestPermissions", javascript)
         self.assertIn("scrollIntoView", javascript)
+        self.assertIn("selectNationalArea", javascript)
+        self.assertIn("focusUserLocation", javascript)
+        self.assertIn("userAccuracyLayer.getBounds", javascript)
         self.assertIn(".mobile-nav", styles)
+        self.assertIn(".leaflet-interactive:focus{outline:none}", styles)
         self.assertIn("ACCESS_FINE_LOCATION", manifest)
         self.assertIn("@capacitor/geolocation", package)
         self.assertIn("`${API_BASE}/api/reports`", javascript)
@@ -93,7 +97,7 @@ class PublicWebDataTests(unittest.TestCase):
         manifest = (ROOT / "android" / "app" / "src" / "main" / "AndroidManifest.xml").read_text()
         self.assertIn('id="updateNow"', update_html)
         self.assertIn("AppUpdater", update_js)
-        self.assertEqual(version["version"], "1.1.1")
+        self.assertEqual(version["version"], "1.1.2")
         self.assertRegex(version["sha256"], r"^[0-9a-f]{64}$")
         self.assertIn('UPDATE_HOST = "shasthopath.krrkhan.com"', updater)
         self.assertIn("hasMatchingSigner", updater)
