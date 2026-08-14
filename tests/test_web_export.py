@@ -66,7 +66,7 @@ class PublicWebDataTests(unittest.TestCase):
     def test_android_download_page_and_live_api_bridge_exist(self):
         download = (ROOT / "web" / "download.html").read_text()
         javascript = (ROOT / "web" / "app.js").read_text()
-        self.assertIn("downloads/shasthopath-1.1.2.apk", download)
+        self.assertIn("downloads/shasthopath-1.2.0.apk", download)
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
 
     def test_mobile_navigation_and_native_location_are_present(self):
@@ -83,6 +83,13 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("selectNationalArea", javascript)
         self.assertIn("focusUserLocation", javascript)
         self.assertIn("userAccuracyLayer.getBounds", javascript)
+        self.assertIn('id="districtDialog"', html)
+        self.assertIn('id="districtSearch"', html)
+        self.assertIn("renderDistrictOptions", javascript)
+        self.assertIn('id="facilityPagination"', html)
+        self.assertIn("PAGE_SIZE=20", javascript)
+        self.assertIn('id="welcomeScreen"', html)
+        self.assertIn("showWelcome", javascript)
         self.assertIn(".mobile-nav", styles)
         self.assertIn(".leaflet-interactive:focus{outline:none}", styles)
         self.assertIn("ACCESS_FINE_LOCATION", manifest)
@@ -97,12 +104,14 @@ class PublicWebDataTests(unittest.TestCase):
         manifest = (ROOT / "android" / "app" / "src" / "main" / "AndroidManifest.xml").read_text()
         self.assertIn('id="updateNow"', update_html)
         self.assertIn("AppUpdater", update_js)
-        self.assertEqual(version["version"], "1.1.2")
+        self.assertEqual(version["version"], "1.2.0")
         self.assertRegex(version["sha256"], r"^[0-9a-f]{64}$")
         self.assertIn('UPDATE_HOST = "shasthopath.krrkhan.com"', updater)
         self.assertIn("hasMatchingSigner", updater)
         self.assertIn("The update checksum does not match", updater)
         self.assertIn("REQUEST_INSTALL_PACKAGES", manifest)
+        self.assertIn("Khalilur Rahman Ridoy Khan", update_html)
+        self.assertIn("https://krrkhan.com", update_html)
 
     def test_public_app_avoids_inline_handlers_for_strict_csp(self):
         javascript = (ROOT / "web" / "app.js").read_text()
@@ -116,6 +125,9 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("shasthopath-reports", javascript)
         self.assertIn("google.com/maps/dir", javascript)
         self.assertIn('/api/reports', javascript)
+        self.assertIn('id="closeReport"', html)
+        self.assertIn('id="cancelReport"', html)
+        self.assertIn('document.querySelector("#closeReport").addEventListener', javascript)
 
     def test_leaflet_is_served_locally(self):
         html = (ROOT / "web" / "index.html").read_text()

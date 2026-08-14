@@ -1,5 +1,5 @@
 const API_BASE=location.protocol==="https:"&&location.hostname==="localhost"?"https://shasthopath.krrkhan.com":"";
-const FALLBACK_VERSION="1.1.2";
+const FALLBACK_VERSION="1.2.0";
 const currentVersion=document.querySelector("#currentVersion"),latestVersion=document.querySelector("#latestVersion"),status=document.querySelector("#updateStatus"),updateNow=document.querySelector("#updateNow"),checkAgain=document.querySelector("#checkAgain");
 let release;
 const updater=()=>window.Capacitor?.Plugins?.AppUpdater;

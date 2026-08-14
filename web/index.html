@@ -13,6 +13,12 @@
   <title>স্বাস্থ্যপথ | ShasthoPath</title>
 </head>
 <body>
+  <div id="welcomeScreen" class="welcome-screen" aria-hidden="true">
+    <div class="welcome-mark"><span>✚</span></div>
+    <strong>স্বাস্থ্যপথ</strong>
+    <p>আপনার কাছের স্বাস্থ্যসেবার পথ</p>
+    <div class="welcome-progress"><i></i></div>
+  </div>
   <header>
     <div><span class="brand-mark" aria-hidden="true">✚</span><strong>স্বাস্থ্যপথ</strong><small>সবার জন্য স্বাস্থ্যসেবা খোঁজার মানচিত্র</small></div>
     <nav aria-label="অ্যাপ ও ভাষা"><a class="quiet" href="download.html">অ্যাপ</a><button id="language" class="quiet" type="button">English</button></nav>
@@ -24,8 +30,9 @@
         <h1 data-i18n="title">আপনার কাছের স্বাস্থ্যসেবা খুঁজুন</h1>
         <p data-i18n="subtitle">হাঁটা ও সড়কপথ মিলিয়ে সম্ভাব্য যাত্রার সময় দেখুন। এটি আনুমানিক—জরুরি অবস্থায় স্থানীয় জরুরি নম্বরে যোগাযোগ করুন।</p>
       </section>
-      <label for="district" data-i18n="district">জেলা</label>
-      <select id="district"><option value="">লোড হচ্ছে…</option></select>
+      <label for="districtPickerButton" data-i18n="district">জেলা</label>
+      <select id="district" class="visually-hidden" tabindex="-1" aria-hidden="true"><option value="">লোড হচ্ছে…</option></select>
+      <button id="districtPickerButton" class="district-picker-button" type="button" aria-haspopup="dialog"><span id="districtPickerLabel">লোড হচ্ছে…</span><span aria-hidden="true">⌄</span></button>
       <label for="search" data-i18n="searchLabel">স্বাস্থ্যকেন্দ্র খুঁজুন</label>
       <div class="search-row"><input id="search" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="নাম বা ধরন"><button id="searchButton" type="button" data-i18n="search">খুঁজুন</button></div>
       <div id="facilityFilters">
@@ -43,7 +50,7 @@
         <div class="metrics"><article><b id="population">—</b><span data-i18n="population">আনুমানিক জনসংখ্যা</span></article><article><b id="underserved">—</b><span data-i18n="underserved">২ ঘণ্টার বেশি দূরে</span></article><article><b id="facilities">—</b><span id="thirdMetricLabel" data-i18n="facilities">মানচিত্রে কেন্দ্র</span></article></div>
       </section>
       <section id="nationalRanking" hidden><h2 data-i18n="highestGaps">সর্বোচ্চ প্রবেশগম্যতার ঘাটতি</h2><ol></ol></section>
-      <section id="facilityDirectory" hidden><h2 data-i18n="nearbyFacilities">স্বাস্থ্যকেন্দ্রের তালিকা</h2><p id="resultCount"></p><ol></ol></section>
+      <section id="facilityDirectory" hidden><h2 data-i18n="nearbyFacilities">স্বাস্থ্যকেন্দ্রের তালিকা</h2><p id="resultCount"></p><ol></ol><nav id="facilityPagination" class="pagination" aria-label="Facility result pages"><button id="previousPage" type="button">← <span data-i18n="previous">আগের</span></button><span id="pageStatus"></span><button id="nextPage" type="button"><span data-i18n="next">পরের</span> →</button></nav></section>
       <div class="toggles"><label><input id="onlyUnderserved" type="checkbox"> <span data-i18n="onlyUnderserved">শুধু ২ ঘণ্টার বেশি</span></label><label><input id="showUncertain" type="checkbox" checked> <span data-i18n="showUncertain">অনিশ্চিত এলাকা দেখান</span></label></div>
       <details><summary data-i18n="understand">এই সময় কীভাবে হিসাব করা হয়েছে?</summary><p data-i18n="method">WorldPop-এর ১ কিমি জনসংখ্যা সেল থেকে নিকটস্থ সড়ক পর্যন্ত ৩ কিমি/ঘণ্টা হাঁটা এবং OSRM সড়কযাত্রার সময় যোগ করা হয়েছে। পাহাড়, নৌপথ, আবহাওয়া ও সড়কের অবস্থা পুরোপুরি ধরা হয়নি।</p></details>
       <p class="sources" data-i18n="sources">তথ্য: HDX Healthsites, WorldPop, OpenStreetMap/Geofabrik ও geoBoundaries।</p>
@@ -57,9 +64,17 @@
     <button type="button" data-mobile-action="details"><span aria-hidden="true">☷</span><span data-i18n="navDetails">বিস্তারিত</span></button>
     <button type="button" data-mobile-action="app"><span aria-hidden="true">↻</span><span data-i18n="navApp">অ্যাপ</span></button>
   </nav>
+  <dialog id="districtDialog" class="picker-dialog">
+    <section>
+      <header><div><strong data-i18n="chooseArea">এলাকা নির্বাচন করুন</strong><small data-i18n="chooseAreaHelp">জেলা খুঁজে দ্রুত নির্বাচন করুন</small></div><button id="closeDistrictPicker" type="button" aria-label="Close">×</button></header>
+      <div class="picker-search"><span aria-hidden="true">⌕</span><input id="districtSearch" type="search" autocomplete="off" data-i18n-placeholder="districtSearch" placeholder="জেলার নাম লিখুন"></div>
+      <div id="districtOptions" class="district-options" role="listbox" aria-label="Districts"></div>
+      <p id="districtEmpty" class="picker-empty" hidden data-i18n="noDistrict">কোনো জেলা পাওয়া যায়নি।</p>
+    </section>
+  </dialog>
   <dialog id="reportDialog">
     <form id="reportForm" method="dialog">
-      <button class="dialog-close" value="cancel" aria-label="Close">×</button>
+      <button id="closeReport" class="dialog-close" type="button" aria-label="Close">×</button>
       <p class="eyebrow" data-i18n="feedbackPilot">অফলাইন পাইলট প্রতিক্রিয়া</p>
       <h2 data-i18n="reportTitle">ভুল তথ্য জানান</h2>
       <p id="reportFacility"></p><input id="reportFacilityData" type="hidden">
@@ -67,7 +82,7 @@
       <select id="issueType" required><option value="location" data-i18n="wrongLocation">ভুল অবস্থান</option><option value="closed" data-i18n="closed">বন্ধ বা নেই</option><option value="name" data-i18n="wrongName">ভুল নাম বা ধরন</option><option value="other" data-i18n="other">অন্যান্য</option></select>
       <label for="issueNote" data-i18n="details">বিস্তারিত</label><textarea id="issueNote" rows="3" maxlength="500" required></textarea>
       <p class="privacy" data-i18n="localOnly">প্রতিবেদনটি এখন শুধু এই ডিভাইসে সংরক্ষিত হবে। ব্যক্তিগত স্বাস্থ্যতথ্য লিখবেন না।</p>
-      <div class="dialog-actions"><button class="quiet" value="cancel" data-i18n="cancel">বাতিল</button><button id="saveReport" value="default" data-i18n="save">ডিভাইসে সংরক্ষণ</button></div>
+      <div class="dialog-actions"><button id="cancelReport" class="quiet" type="button" data-i18n="cancel">বাতিল</button><button id="saveReport" type="submit" value="default" data-i18n="save">ডিভাইসে সংরক্ষণ</button></div>
     </form>
   </dialog>
   <noscript>এই মানচিত্র ব্যবহারের জন্য JavaScript চালু করুন।</noscript>

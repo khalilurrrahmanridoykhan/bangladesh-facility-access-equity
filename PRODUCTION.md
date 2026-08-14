@@ -11,7 +11,7 @@
 
 The Python service and static PWA run as the non-root `app` user in a read-only Docker container. Only `data/reports/` is writable and persistent. The service joins the existing `onehealth-platform_default` Docker network, where the existing Caddy proxy terminates TLS and routes the public hostname to `shasthopath:8080`.
 
-The Android app bundles the same public web assets. Native feedback requests are restricted to the Capacitor origin and sent to the production HTTPS API. Production deployment creates a release-signed APK and places it at `web/downloads/shasthopath-1.1.2.apk` before rebuilding the service image.
+The Android app bundles the same public web assets. Native feedback requests are restricted to the Capacitor origin and sent to the production HTTPS API. Production deployment creates a release-signed APK and places it at `web/downloads/shasthopath-1.2.0.apk` before rebuilding the service image.
 
 ## Server-only secrets
 
@@ -31,8 +31,8 @@ Verify after every release:
 
 ```bash
 curl --fail https://shasthopath.krrkhan.com/api/health
-curl --fail --head https://shasthopath.krrkhan.com/downloads/shasthopath-1.1.2.apk
-sha256sum web/downloads/shasthopath-1.1.2.apk
+curl --fail --head https://shasthopath.krrkhan.com/downloads/shasthopath-1.2.0.apk
+sha256sum web/downloads/shasthopath-1.2.0.apk
 ```
 
 ## GitHub Actions
