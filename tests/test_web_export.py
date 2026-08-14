@@ -66,7 +66,7 @@ class PublicWebDataTests(unittest.TestCase):
     def test_android_download_page_and_live_api_bridge_exist(self):
         download = (ROOT / "web" / "download.html").read_text()
         javascript = (ROOT / "web" / "app.js").read_text()
-        self.assertIn("downloads/shasthopath-1.1.0.apk", download)
+        self.assertIn("downloads/shasthopath-1.1.1.apk", download)
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
 
     def test_mobile_navigation_and_native_location_are_present(self):
@@ -84,6 +84,21 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("ACCESS_FINE_LOCATION", manifest)
         self.assertIn("@capacitor/geolocation", package)
         self.assertIn("`${API_BASE}/api/reports`", javascript)
+
+    def test_in_app_update_center_and_signed_installer_are_present(self):
+        update_html = (ROOT / "web" / "update.html").read_text()
+        update_js = (ROOT / "web" / "update.js").read_text()
+        version = json.loads((ROOT / "web" / "app-version.json").read_text())
+        updater = (ROOT / "android" / "app" / "src" / "main" / "java" / "org" / "shasthopath" / "app" / "AppUpdaterPlugin.java").read_text()
+        manifest = (ROOT / "android" / "app" / "src" / "main" / "AndroidManifest.xml").read_text()
+        self.assertIn('id="updateNow"', update_html)
+        self.assertIn("AppUpdater", update_js)
+        self.assertEqual(version["version"], "1.1.1")
+        self.assertRegex(version["sha256"], r"^[0-9a-f]{64}$")
+        self.assertIn('UPDATE_HOST = "shasthopath.krrkhan.com"', updater)
+        self.assertIn("hasMatchingSigner", updater)
+        self.assertIn("The update checksum does not match", updater)
+        self.assertIn("REQUEST_INSTALL_PACKAGES", manifest)
 
     def test_public_app_avoids_inline_handlers_for_strict_csp(self):
         javascript = (ROOT / "web" / "app.js").read_text()

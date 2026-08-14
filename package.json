@@ -1,7 +1,7 @@
 {
   "name": "shasthopath-public-pwa",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "scripts": {
     "vendor": "mkdir -p web/vendor/leaflet/images && cp node_modules/leaflet/dist/leaflet.css node_modules/leaflet/dist/leaflet.js web/vendor/leaflet/ && cp node_modules/leaflet/dist/images/* web/vendor/leaflet/images/",
     "android:sync": "cap sync android",
