@@ -20,6 +20,13 @@ class PublicWebDataTests(unittest.TestCase):
         for name in ("index.html", "app.js", "styles.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)
 
+    def test_feedback_dialog_and_directions_are_present(self):
+        html = (ROOT / "web" / "index.html").read_text()
+        javascript = (ROOT / "web" / "app.js").read_text()
+        self.assertIn('id="reportDialog"', html)
+        self.assertIn("shasthopath-reports", javascript)
+        self.assertIn("google.com/maps/dir", javascript)
+
 
 if __name__ == "__main__":
     unittest.main()

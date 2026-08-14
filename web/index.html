@@ -39,6 +39,19 @@
     </aside>
     <section id="map" aria-label="স্বাস্থ্যসেবা প্রবেশগম্যতার মানচিত্র"></section>
   </main>
+  <dialog id="reportDialog">
+    <form id="reportForm" method="dialog">
+      <button class="dialog-close" value="cancel" aria-label="Close">×</button>
+      <p class="eyebrow" data-i18n="feedbackPilot">অফলাইন পাইলট প্রতিক্রিয়া</p>
+      <h2 data-i18n="reportTitle">ভুল তথ্য জানান</h2>
+      <p id="reportFacility"></p><input id="reportFacilityData" type="hidden">
+      <label for="issueType" data-i18n="issueType">কী ভুল?</label>
+      <select id="issueType" required><option value="location" data-i18n="wrongLocation">ভুল অবস্থান</option><option value="closed" data-i18n="closed">বন্ধ বা নেই</option><option value="name" data-i18n="wrongName">ভুল নাম বা ধরন</option><option value="other" data-i18n="other">অন্যান্য</option></select>
+      <label for="issueNote" data-i18n="details">বিস্তারিত</label><textarea id="issueNote" rows="3" maxlength="500" required></textarea>
+      <p class="privacy" data-i18n="localOnly">প্রতিবেদনটি এখন শুধু এই ডিভাইসে সংরক্ষিত হবে। ব্যক্তিগত স্বাস্থ্যতথ্য লিখবেন না।</p>
+      <div class="dialog-actions"><button class="quiet" value="cancel" data-i18n="cancel">বাতিল</button><button id="saveReport" value="default" data-i18n="save">ডিভাইসে সংরক্ষণ</button></div>
+    </form>
+  </dialog>
   <noscript>এই মানচিত্র ব্যবহারের জন্য JavaScript চালু করুন।</noscript>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="app.js" defer></script>
