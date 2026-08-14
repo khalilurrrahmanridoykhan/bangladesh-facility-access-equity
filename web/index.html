@@ -18,8 +18,8 @@
     <nav aria-label="অ্যাপ ও ভাষা"><a class="quiet" href="download.html">অ্যাপ</a><button id="language" class="quiet" type="button">English</button></nav>
   </header>
   <main>
-    <aside aria-label="মানচিত্র নিয়ন্ত্রণ">
-      <section class="intro">
+    <aside id="controls" aria-label="মানচিত্র নিয়ন্ত্রণ">
+      <section id="findSection" class="intro">
         <p class="eyebrow" data-i18n="pilot">পরীক্ষামূলক জনসেবা</p>
         <h1 data-i18n="title">আপনার কাছের স্বাস্থ্যসেবা খুঁজুন</h1>
         <p data-i18n="subtitle">হাঁটা ও সড়কপথ মিলিয়ে সম্ভাব্য যাত্রার সময় দেখুন। এটি আনুমানিক—জরুরি অবস্থায় স্থানীয় জরুরি নম্বরে যোগাযোগ করুন।</p>
@@ -38,7 +38,7 @@
         <small id="offlineStatus" role="status" aria-live="polite"></small>
       </section>
       <div id="message" role="status" aria-live="polite"></div>
-      <section class="summary" aria-labelledby="summaryTitle">
+      <section id="detailsSection" class="summary" aria-labelledby="summaryTitle">
         <h2 id="summaryTitle" data-i18n="summary">জেলার সারসংক্ষেপ</h2>
         <div class="metrics"><article><b id="population">—</b><span data-i18n="population">আনুমানিক জনসংখ্যা</span></article><article><b id="underserved">—</b><span data-i18n="underserved">২ ঘণ্টার বেশি দূরে</span></article><article><b id="facilities">—</b><span id="thirdMetricLabel" data-i18n="facilities">মানচিত্রে কেন্দ্র</span></article></div>
       </section>
@@ -50,6 +50,12 @@
     </aside>
     <section id="map" aria-label="স্বাস্থ্যসেবা প্রবেশগম্যতার মানচিত্র"></section>
   </main>
+  <nav id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
+    <button type="button" data-mobile-action="map"><span aria-hidden="true">⌖</span><span data-i18n="navMap">মানচিত্র</span></button>
+    <button type="button" data-mobile-action="find"><span aria-hidden="true">⌕</span><span data-i18n="navFind">খুঁজুন</span></button>
+    <button type="button" data-mobile-action="near"><span aria-hidden="true">◎</span><span data-i18n="navNear">কাছাকাছি</span></button>
+    <button type="button" data-mobile-action="details"><span aria-hidden="true">☷</span><span data-i18n="navDetails">বিস্তারিত</span></button>
+  </nav>
   <dialog id="reportDialog">
     <form id="reportForm" method="dialog">
       <button class="dialog-close" value="cancel" aria-label="Close">×</button>

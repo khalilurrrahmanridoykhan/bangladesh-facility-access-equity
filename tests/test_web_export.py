@@ -68,6 +68,21 @@ class PublicWebDataTests(unittest.TestCase):
         javascript = (ROOT / "web" / "app.js").read_text()
         self.assertIn("downloads/shasthopath-1.0.apk", download)
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
+
+    def test_mobile_navigation_and_native_location_are_present(self):
+        html = (ROOT / "web" / "index.html").read_text()
+        javascript = (ROOT / "web" / "app.js").read_text()
+        styles = (ROOT / "web" / "styles.css").read_text()
+        manifest = (ROOT / "android" / "app" / "src" / "main" / "AndroidManifest.xml").read_text()
+        package = (ROOT / "package.json").read_text()
+        self.assertIn('id="mobileNav"', html)
+        self.assertIn('data-mobile-action="near"', html)
+        self.assertIn("nativeGeolocation", javascript)
+        self.assertIn("requestPermissions", javascript)
+        self.assertIn("scrollIntoView", javascript)
+        self.assertIn(".mobile-nav", styles)
+        self.assertIn("ACCESS_FINE_LOCATION", manifest)
+        self.assertIn("@capacitor/geolocation", package)
         self.assertIn("`${API_BASE}/api/reports`", javascript)
 
     def test_public_app_avoids_inline_handlers_for_strict_csp(self):
