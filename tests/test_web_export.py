@@ -70,6 +70,11 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
         self.assertIn("`${API_BASE}/api/reports`", javascript)
 
+    def test_public_app_avoids_inline_handlers_for_strict_csp(self):
+        javascript = (ROOT / "web" / "app.js").read_text()
+        self.assertNotIn("onclick=", javascript)
+        self.assertIn('map.on("popupopen"', javascript)
+
     def test_feedback_dialog_and_directions_are_present(self):
         html = (ROOT / "web" / "index.html").read_text()
         javascript = (ROOT / "web" / "app.js").read_text()
