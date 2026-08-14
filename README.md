@@ -36,15 +36,13 @@ make web-data
 make serve
 ```
 
-Open `http://localhost:8080`. The same responsive app works in a mobile browser and can be installed to the home screen. Production deployment must use HTTPS for full PWA behavior.
+Open `http://localhost:8080`. The responsive app works in a mobile browser and can be installed to the home screen. Production uses HTTPS for full PWA behavior.
 
-Select a district to browse facilities ordered by proximity to the map centre, filter by facility type, or search by name. Choosing a result focuses its map marker; the share action creates a deep link that reopens the same district and facility. Using current location reorders the directory by straight-line proximity and does not store location history.
+Select a district to browse facilities, filter by facility type, or search by name. Choosing a result focuses its map marker; the share action creates a deep link that reopens the same district and facility. Current location reorders the directory by straight-line proximity and is not stored as location history.
 
-The district view also provides an explicit offline download. It stores the district data and a bounded set of overview map tiles (zoom levels 8–11) in the browser. The same control removes that district's downloaded copy. Detailed directions still open an external service and require connectivity.
+The district view also supports explicit offline downloads. It stores district data and a bounded set of overview map tiles (zoom levels 8–11). Detailed directions open an external service and require connectivity.
 
-If an older local version is already open, reload once after restarting the server. The service worker will replace its old application cache automatically.
-
-Facility-error reports are validated by the local API and appended to `data/reports/facility-reports.ndjson`. When offline, the PWA queues reports on the device and synchronizes them after connectivity returns. Do not expose this development server directly to the internet; production deployment still requires HTTPS, authentication for the review interface, durable storage, and infrastructure-level rate limiting.
+Facility-error reports are validated by the API and appended to `data/reports/facility-reports.ndjson`. Offline reports are queued on the device and synchronized when connectivity returns.
 
 To enable the protected local review dashboard:
 
@@ -58,10 +56,14 @@ Open `http://localhost:8080/admin.html` and enter the same token. Review decisio
 
 The repository includes a Capacitor Android wrapper, a release APK pipeline, an isolated Docker service, and GitHub Actions for tests, Android test artifacts, and VPS deployment. See [PRODUCTION.md](PRODUCTION.md) for server architecture, secret handling, release commands, signing-key backup requirements, and Amazon Appstore preparation.
 
+## Legacy union-level analysis
+
+The original repository analysis is preserved in [LEGACY_UNION_ANALYSIS.md](LEGACY_UNION_ANALYSIS.md), together with its scripts and published union summary. It used a different facility union and routing model, so its statistics should not be mixed with the current first-mile-plus-road model.
+
 ## Method
 
 Population raster cell centres with positive population are clipped to the selected district. Facilities are clipped to the district plus a configurable buffer, snapped by OSRM, and evaluated in batches with OSRM's Table API. The minimum driving duration is retained for each cell. Unreachable cells remain explicit rather than being treated as greater than two hours.
 
-OSRM's distance from each population-cell centre to its snapped road location is retained as `road_snap_distance_m`. The model converts the population and facility road-snap distances to walking time at a conservative default speed of 3 km/h, then adds this to OSRM driving time. Cells farther than 2 km from a drivable road are also marked `long_road_snap` because straight-line walking remains an approximation, especially in mountainous terrain.
+OSRM's distance from each population-cell centre to its snapped road location is retained as `road_snap_distance_m`. The model converts the population and facility road-snap distances to walking time at a conservative default speed of 3 km/h, then adds this to OSRM driving time. Cells farther than 2 km from a drivable road are marked `long_road_snap` because straight-line walking remains an approximation, especially in mountainous terrain.
 
 This is a screening tool. Healthsites completeness and OSM road coverage must be validated before policy use.

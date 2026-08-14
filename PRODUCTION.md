@@ -39,7 +39,7 @@ sha256sum web/downloads/shasthopath-1.0.apk
 
 - `CI` runs Python tests, JavaScript syntax checks, and the production dependency audit.
 - `Android test APK` creates a short-lived debug APK artifact for pull requests or manual testing.
-- `Deploy production` uploads committed source to the VPS, builds the release-signed APK on the VPS, and rebuilds the production container after changes reach `master`.
+- `Deploy production` uploads committed source to the VPS, builds the release-signed APK on the VPS, and rebuilds the production container after changes reach `main`.
 
 The repository production environment requires one GitHub secret:
 
