@@ -1,0 +1,9 @@
+shasthopath.krrkhan.com {
+	encode zstd gzip
+	reverse_proxy shasthopath:8080
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Content-Security-Policy "default-src 'self'; connect-src 'self' https://a.basemaps.cartocdn.com; img-src 'self' data: https://a.basemaps.cartocdn.com; style-src 'self' 'unsafe-inline'; script-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+		X-Frame-Options "DENY"
+	}
+}

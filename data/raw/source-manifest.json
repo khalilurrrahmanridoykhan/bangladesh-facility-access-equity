@@ -1,0 +1,46 @@
+{
+  "sources": [
+    {
+      "dataset": "bangladesh-healthsites",
+      "dataset_modified": "2026-06-11T11:47:38.795723",
+      "resource": "bangladesh-healthsites-hxl-geojson",
+      "resource_modified": "2026-06-11T11:47:22.979972",
+      "license": "ODbL",
+      "url": "https://data.humdata.org/dataset/ab89f238-af45-419e-94aa-f91ef0ce42d0/resource/51170838-b2f0-4388-94a2-8f72f157e312/download/bangladesh_hxl.geojson",
+      "path": "data/raw/bangladesh_healthsites.geojson",
+      "bytes": 7707270,
+      "sha256": "d2a34566be40c4055d58951d6dbb623295ee67ec8b9c29ed525c1ca175491286",
+      "cached": false
+    },
+    {
+      "dataset": "worldpop-population-counts-for-bangladesh",
+      "dataset_modified": "2025-08-26T13:55:31.098603",
+      "resource": "bgd_ppp_2020_1km_Aggregated.tif",
+      "resource_modified": "2020-06-22T13:15:20",
+      "license": "Other",
+      "url": "https://data.worldpop.org/GIS/Population/Global_2000_2020_1km/2020/BGD/bgd_ppp_2020_1km_Aggregated.tif",
+      "path": "data/raw/bgd_ppp_2020_1km_aggregated.tif",
+      "bytes": 878831,
+      "sha256": "efbb247f143545cff4bb7731d502a710b245f60207341f8f0d00e5279c873259",
+      "cached": false
+    },
+    {
+      "dataset": "geoBoundaries BGD ADM2",
+      "license": "CC BY 4.0",
+      "url": "https://github.com/wmgeolab/geoBoundaries/raw/main/releaseData/gbOpen/BGD/ADM2/geoBoundaries-BGD-ADM2.geojson",
+      "path": "data/raw/geoBoundaries-BGD-ADM2.geojson",
+      "bytes": 46554183,
+      "sha256": "54379ccc77f6f59dab3569ecc5f9b3850dbed2d65a5f43a034bdf92179f5621b",
+      "cached": false
+    },
+    {
+      "dataset": "Geofabrik Bangladesh OpenStreetMap extract",
+      "license": "ODbL",
+      "url": "https://download.geofabrik.de/asia/bangladesh-latest.osm.pbf",
+      "path": "data/raw/bangladesh-latest.osm.pbf",
+      "bytes": 351757299,
+      "sha256": "0251d9b3a7e8310a20f559208bd83973fdc5b561f717bf4b64d7bacff06b64ea",
+      "cached": false
+    }
+  ]
+}

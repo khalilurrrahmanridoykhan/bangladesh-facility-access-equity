@@ -1,0 +1,15 @@
+.git
+.github
+.venv
+node_modules
+.android-sdk
+.downloads
+.tools
+android/.gradle
+android/**/build
+data/raw
+data/processed
+data/reports
+outputs
+*.jks
+*.keystore
