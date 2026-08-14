@@ -1,0 +1,9 @@
+{
+  "name": "shasthopath-public-pwa",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "vendor": "mkdir -p web/vendor/leaflet/images && cp node_modules/leaflet/dist/leaflet.css node_modules/leaflet/dist/leaflet.js web/vendor/leaflet/ && cp node_modules/leaflet/dist/images/* web/vendor/leaflet/images/"
+  },
+  "dependencies": {"leaflet": "1.9.4"}
+}

@@ -6,6 +6,8 @@ PYTHON := .venv/bin/python
 setup:
 	python3 -m venv .venv
 	$(PYTHON) -m pip install -r requirements.txt
+	npm install
+	npm run vendor
 
 download:
 	$(PYTHON) scripts/download_data.py

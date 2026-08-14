@@ -27,6 +27,13 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("shasthopath-reports", javascript)
         self.assertIn("google.com/maps/dir", javascript)
 
+    def test_leaflet_is_served_locally(self):
+        html = (ROOT / "web" / "index.html").read_text()
+        self.assertIn("vendor/leaflet/leaflet.css", html)
+        self.assertIn("vendor/leaflet/leaflet.js", html)
+        self.assertNotIn("unpkg.com/leaflet", html)
+        self.assertGreater((ROOT / "web" / "vendor" / "leaflet" / "leaflet.css").stat().st_size, 10_000)
+
 
 if __name__ == "__main__":
     unittest.main()
