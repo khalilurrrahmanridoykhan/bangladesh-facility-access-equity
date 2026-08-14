@@ -4,7 +4,7 @@
   "version": "1.2.1",
   "scripts": {
     "vendor": "mkdir -p web/vendor/leaflet/images && cp node_modules/leaflet/dist/leaflet.css node_modules/leaflet/dist/leaflet.js web/vendor/leaflet/ && cp node_modules/leaflet/dist/images/* web/vendor/leaflet/images/",
-    "android:sync": "cap sync android",
+    "android:sync": "bash scripts/sync_android.sh",
     "android:debug": "npm run android:sync && cd android && ./gradlew assembleDebug",
     "android:bundle": "npm run android:sync && cd android && ./gradlew bundleRelease"
   },

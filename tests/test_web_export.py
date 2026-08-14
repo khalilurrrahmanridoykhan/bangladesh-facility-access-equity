@@ -69,6 +69,12 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn("downloads/shasthopath-1.2.1.apk", download)
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
 
+    def test_android_sync_excludes_hosted_apk_downloads(self):
+        sync_script = (ROOT / "scripts" / "sync_android.sh").read_text()
+        package = json.loads((ROOT / "package.json").read_text())
+        self.assertIn("--exclude 'downloads/'", sync_script)
+        self.assertEqual(package["scripts"]["android:sync"], "bash scripts/sync_android.sh")
+
     def test_mobile_navigation_and_native_location_are_present(self):
         html = (ROOT / "web" / "index.html").read_text()
         javascript = (ROOT / "web" / "app.js").read_text()
