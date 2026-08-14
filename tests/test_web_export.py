@@ -66,7 +66,7 @@ class PublicWebDataTests(unittest.TestCase):
     def test_android_download_page_and_live_api_bridge_exist(self):
         download = (ROOT / "web" / "download.html").read_text()
         javascript = (ROOT / "web" / "app.js").read_text()
-        self.assertIn("downloads/shasthopath-1.0.apk", download)
+        self.assertIn("downloads/shasthopath-1.1.0.apk", download)
         self.assertIn("https://shasthopath.krrkhan.com", javascript)
 
     def test_mobile_navigation_and_native_location_are_present(self):

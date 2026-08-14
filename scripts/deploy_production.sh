@@ -28,8 +28,8 @@ npm run android:sync
 (cd android && ./gradlew assembleRelease)
 
 install -d web/downloads data/reports
-install -m 0644 android/app/build/outputs/apk/release/app-release.apk web/downloads/shasthopath-1.0.apk
-(cd web/downloads && sha256sum shasthopath-1.0.apk > shasthopath-1.0.apk.sha256)
+install -m 0644 android/app/build/outputs/apk/release/app-release.apk web/downloads/shasthopath-1.1.0.apk
+(cd web/downloads && sha256sum shasthopath-1.1.0.apk > shasthopath-1.1.0.apk.sha256)
 
 sudo chown -R 10001:10001 data/reports
 sudo docker compose -f deploy/compose.production.yml build
