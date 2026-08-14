@@ -36,12 +36,21 @@ class PublicWebDataTests(unittest.TestCase):
 
     def test_public_app_defaults_to_clickable_national_overview(self):
         javascript = (ROOT / "web" / "app.js").read_text()
-        self.assertIn('district.value="national"', javascript)
+        self.assertIn('?requested:"national"', javascript)
         self.assertIn('facility-access-national-v1', javascript)
         self.assertIn('window.selectDistrict=setDistrict', javascript)
 
+    def test_facility_directory_supports_filters_and_shareable_links(self):
+        html = (ROOT / "web" / "index.html").read_text()
+        javascript = (ROOT / "web" / "app.js").read_text()
+        self.assertIn('id="facilityType"', html)
+        self.assertIn('id="facilityDirectory"', html)
+        self.assertIn("renderFacilityDirectory", javascript)
+        self.assertIn('url.searchParams.set("facility",index)', javascript)
+        self.assertIn("navigator.share", javascript)
+
     def test_pwa_core_assets_exist(self):
-        for name in ("index.html", "app.js", "styles.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
+        for name in ("index.html", "app.js", "styles.css", "directory.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)
 
     def test_feedback_dialog_and_directions_are_present(self):

@@ -36,6 +36,8 @@ make serve
 
 Open `http://localhost:8080`. The same responsive app works in a mobile browser and can be installed to the home screen. Production deployment must use HTTPS for full PWA behavior.
 
+Select a district to browse facilities ordered by proximity to the map centre, filter by facility type, or search by name. Choosing a result focuses its map marker; the share action creates a deep link that reopens the same district and facility. Using current location reorders the directory by straight-line proximity and does not store location history.
+
 If an older local version is already open, reload once after restarting the server. The service worker will replace its old application cache automatically.
 
 Facility-error reports are validated by the local API and appended to `data/reports/facility-reports.ndjson`. When offline, the PWA queues reports on the device and synchronizes them after connectivity returns. Do not expose this development server directly to the internet; production deployment still requires HTTPS, authentication for the review interface, durable storage, and infrastructure-level rate limiting.

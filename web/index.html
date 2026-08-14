@@ -9,6 +9,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="directory.css">
   <title>স্বাস্থ্যপথ | ShasthoPath</title>
 </head>
 <body>
@@ -27,6 +28,10 @@
       <select id="district"><option value="">লোড হচ্ছে…</option></select>
       <label for="search" data-i18n="searchLabel">স্বাস্থ্যকেন্দ্র খুঁজুন</label>
       <div class="search-row"><input id="search" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="নাম বা ধরন"><button id="searchButton" type="button" data-i18n="search">খুঁজুন</button></div>
+      <div id="facilityFilters">
+        <label for="facilityType" data-i18n="facilityType">কেন্দ্রের ধরন</label>
+        <select id="facilityType"><option value="" data-i18n="allTypes">সব ধরন</option></select>
+      </div>
       <button id="locate" class="location" type="button" data-i18n="locate">⌖ আমার অবস্থানের কাছাকাছি</button>
       <div id="message" role="status" aria-live="polite"></div>
       <section class="summary" aria-labelledby="summaryTitle">
@@ -34,6 +39,7 @@
         <div class="metrics"><article><b id="population">—</b><span data-i18n="population">আনুমানিক জনসংখ্যা</span></article><article><b id="underserved">—</b><span data-i18n="underserved">২ ঘণ্টার বেশি দূরে</span></article><article><b id="facilities">—</b><span id="thirdMetricLabel" data-i18n="facilities">মানচিত্রে কেন্দ্র</span></article></div>
       </section>
       <section id="nationalRanking" hidden><h2 data-i18n="highestGaps">সর্বোচ্চ প্রবেশগম্যতার ঘাটতি</h2><ol></ol></section>
+      <section id="facilityDirectory" hidden><h2 data-i18n="nearbyFacilities">স্বাস্থ্যকেন্দ্রের তালিকা</h2><p id="resultCount"></p><ol></ol></section>
       <div class="toggles"><label><input id="onlyUnderserved" type="checkbox"> <span data-i18n="onlyUnderserved">শুধু ২ ঘণ্টার বেশি</span></label><label><input id="showUncertain" type="checkbox" checked> <span data-i18n="showUncertain">অনিশ্চিত এলাকা দেখান</span></label></div>
       <details><summary data-i18n="understand">এই সময় কীভাবে হিসাব করা হয়েছে?</summary><p data-i18n="method">WorldPop-এর ১ কিমি জনসংখ্যা সেল থেকে নিকটস্থ সড়ক পর্যন্ত ৩ কিমি/ঘণ্টা হাঁটা এবং OSRM সড়কযাত্রার সময় যোগ করা হয়েছে। পাহাড়, নৌপথ, আবহাওয়া ও সড়কের অবস্থা পুরোপুরি ধরা হয়নি।</p></details>
       <p class="sources" data-i18n="sources">তথ্য: HDX Healthsites, WorldPop, OpenStreetMap/Geofabrik ও geoBoundaries।</p>

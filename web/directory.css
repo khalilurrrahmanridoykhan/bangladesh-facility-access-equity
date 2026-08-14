@@ -1,0 +1,68 @@
+#facilityFilters {
+  margin-top: 10px;
+}
+
+#facilityDirectory {
+  border-top: 1px solid #dbe8e9;
+  margin-top: 16px;
+}
+
+#facilityDirectory h2 {
+  margin-bottom: 4px;
+}
+
+#resultCount {
+  color: #526d70;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+
+#facilityDirectory ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.facility-result {
+  border-bottom: 1px solid #e4eeee;
+  padding: 10px 0;
+}
+
+.facility-result > button {
+  background: none;
+  border: 0;
+  color: #102a43;
+  cursor: pointer;
+  display: block;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.facility-result strong,
+.facility-result small {
+  display: block;
+}
+
+.facility-result small {
+  color: #526d70;
+  margin-top: 2px;
+}
+
+.result-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 7px;
+}
+
+.result-actions a,
+.result-actions button {
+  background: none;
+  border: 0;
+  color: var(--brand);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 650;
+  padding: 0;
+  text-decoration: underline;
+}
