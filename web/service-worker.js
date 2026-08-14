@@ -1,4 +1,4 @@
-const CACHE = "shasthopath-v4";
+const CACHE = "shasthopath-v5";
 const CORE = [
   "./", "index.html", "styles.css", "app.js", "manifest.webmanifest",
   "icon.svg", "tile-fallback.svg", "vendor/leaflet/leaflet.css",

@@ -26,6 +26,7 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn('id="reportDialog"', html)
         self.assertIn("shasthopath-reports", javascript)
         self.assertIn("google.com/maps/dir", javascript)
+        self.assertIn('/api/reports', javascript)
 
     def test_leaflet_is_served_locally(self):
         html = (ROOT / "web" / "index.html").read_text()

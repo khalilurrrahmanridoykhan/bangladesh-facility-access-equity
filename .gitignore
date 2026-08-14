@@ -1,5 +1,6 @@
 .venv/
 node_modules/
+data/reports/
 data/raw/*
 data/processed/*
 outputs/*

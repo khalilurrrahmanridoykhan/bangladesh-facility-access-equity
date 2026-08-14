@@ -22,7 +22,7 @@ web-data:
 	$(PYTHON) scripts/export_web_data.py
 
 serve: web-data
-	$(PYTHON) -m http.server 8080 --directory web
+	$(PYTHON) scripts/serve_app.py
 
 test:
 	$(PYTHON) -m unittest discover -s tests -v
