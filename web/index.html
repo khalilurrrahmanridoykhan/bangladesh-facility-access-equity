@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#075985">
+  <meta name="description" content="বাংলাদেশে নিকটস্থ স্বাস্থ্যসেবা ও যাতায়াতের আনুমানিক সময় দেখুন">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3ynhNRn5DQV5wL5ECK7pJo2/lJeZo=" crossorigin="">
+  <link rel="stylesheet" href="styles.css">
+  <title>স্বাস্থ্যপথ | ShasthoPath</title>
+</head>
+<body>
+  <header>
+    <div><span class="brand-mark" aria-hidden="true">✚</span><strong>স্বাস্থ্যপথ</strong><small>সবার জন্য স্বাস্থ্যসেবা খোঁজার মানচিত্র</small></div>
+    <button id="language" class="quiet" type="button">English</button>
+  </header>
+  <main>
+    <aside aria-label="মানচিত্র নিয়ন্ত্রণ">
+      <section class="intro">
+        <p class="eyebrow" data-i18n="pilot">পরীক্ষামূলক জনসেবা</p>
+        <h1 data-i18n="title">আপনার কাছের স্বাস্থ্যসেবা খুঁজুন</h1>
+        <p data-i18n="subtitle">হাঁটা ও সড়কপথ মিলিয়ে সম্ভাব্য যাত্রার সময় দেখুন। এটি আনুমানিক—জরুরি অবস্থায় স্থানীয় জরুরি নম্বরে যোগাযোগ করুন।</p>
+      </section>
+      <label for="district" data-i18n="district">জেলা</label>
+      <select id="district"><option value="dhaka">ঢাকা</option><option value="bandarban">বান্দরবান</option></select>
+      <label for="search" data-i18n="searchLabel">স্বাস্থ্যকেন্দ্র খুঁজুন</label>
+      <div class="search-row"><input id="search" type="search" autocomplete="off" data-i18n-placeholder="searchPlaceholder" placeholder="নাম বা ধরন"><button id="searchButton" type="button" data-i18n="search">খুঁজুন</button></div>
+      <button id="locate" class="location" type="button" data-i18n="locate">⌖ আমার অবস্থানের কাছাকাছি</button>
+      <div id="message" role="status" aria-live="polite"></div>
+      <section class="summary" aria-labelledby="summaryTitle">
+        <h2 id="summaryTitle" data-i18n="summary">জেলার সারসংক্ষেপ</h2>
+        <div class="metrics"><article><b id="population">—</b><span data-i18n="population">আনুমানিক জনসংখ্যা</span></article><article><b id="underserved">—</b><span data-i18n="underserved">২ ঘণ্টার বেশি দূরে</span></article><article><b id="facilities">—</b><span data-i18n="facilities">মানচিত্রে কেন্দ্র</span></article></div>
+      </section>
+      <div class="toggles"><label><input id="onlyUnderserved" type="checkbox"> <span data-i18n="onlyUnderserved">শুধু ২ ঘণ্টার বেশি</span></label><label><input id="showUncertain" type="checkbox" checked> <span data-i18n="showUncertain">অনিশ্চিত এলাকা দেখান</span></label></div>
+      <details><summary data-i18n="understand">এই সময় কীভাবে হিসাব করা হয়েছে?</summary><p data-i18n="method">WorldPop-এর ১ কিমি জনসংখ্যা সেল থেকে নিকটস্থ সড়ক পর্যন্ত ৩ কিমি/ঘণ্টা হাঁটা এবং OSRM সড়কযাত্রার সময় যোগ করা হয়েছে। পাহাড়, নৌপথ, আবহাওয়া ও সড়কের অবস্থা পুরোপুরি ধরা হয়নি।</p></details>
+      <p class="sources" data-i18n="sources">তথ্য: HDX Healthsites, WorldPop, OpenStreetMap/Geofabrik ও geoBoundaries।</p>
+    </aside>
+    <section id="map" aria-label="স্বাস্থ্যসেবা প্রবেশগম্যতার মানচিত্র"></section>
+  </main>
+  <noscript>এই মানচিত্র ব্যবহারের জন্য JavaScript চালু করুন।</noscript>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

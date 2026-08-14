@@ -23,6 +23,17 @@ make pilot
 
 The pilot writes GeoJSON, CSV, a PNG map, and a JSON summary into `outputs/`.
 
+## Public web/mobile pilot
+
+Generate the compact public datasets and serve the installable PWA:
+
+```bash
+make web-data
+make serve
+```
+
+Open `http://localhost:8080`. The same responsive app works in a mobile browser and can be installed to the home screen. Production deployment must use HTTPS for full PWA behavior.
+
 ## Method
 
 Population raster cell centres with positive population are clipped to the selected district. Facilities are clipped to the district plus a configurable buffer, snapped by OSRM, and evaluated in batches with OSRM's Table API. The minimum driving duration is retained for each cell. Unreachable cells remain explicit rather than being treated as greater than two hours.

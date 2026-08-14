@@ -1,7 +1,7 @@
 SHELL := /bin/zsh
 PYTHON := .venv/bin/python
 
-.PHONY: setup download graph pilot test
+.PHONY: setup download graph pilot web-data serve test
 
 setup:
 	python3 -m venv .venv
@@ -16,6 +16,11 @@ graph:
 pilot:
 	$(PYTHON) scripts/run_pilot.py --district Dhaka
 
+web-data:
+	$(PYTHON) scripts/export_web_data.py
+
+serve: web-data
+	$(PYTHON) -m http.server 8080 --directory web
+
 test:
 	$(PYTHON) -m unittest discover -s tests -v
-
