@@ -2,7 +2,7 @@ const copy={bn:{pilot:"পরীক্ষামূলক জনসেবা",tit
 let language="bn",data,cellLayer,facilityLayer,userMarker;
 const district=document.querySelector("#district"),message=document.querySelector("#message"),population=document.querySelector("#population"),underserved=document.querySelector("#underserved"),facilities=document.querySelector("#facilities"),search=document.querySelector("#search"),languageButton=document.querySelector("#language");
 const map=L.map("map",{zoomControl:true}).setView([23.7,90.4],8);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{subdomains:"abcd",maxZoom:19,errorTileUrl:"tile-fallback.svg",updateWhenIdle:true,keepBuffer:3,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'}).addTo(map);
 const color=t=>t>120?"#b91c1c":t>90?"#ea580c":t>60?"#eab308":t>30?"#84cc16":"#059669";
 const fmt=n=>new Intl.NumberFormat(language==="bn"?"bn-BD":"en-US",{maximumFractionDigits:0}).format(n);
 function translate(){document.documentElement.lang=language;document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=copy[language][e.dataset.i18n]);document.querySelectorAll("[data-i18n-placeholder]").forEach(e=>e.placeholder=copy[language][e.dataset.i18nPlaceholder]);document.querySelector("#language").textContent=language==="bn"?"English":"বাংলা";if(data)render();}

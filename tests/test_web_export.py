@@ -17,7 +17,7 @@ class PublicWebDataTests(unittest.TestCase):
             self.assertEqual(payload["summary"]["district"].casefold(), district)
 
     def test_pwa_core_assets_exist(self):
-        for name in ("index.html", "app.js", "styles.css", "manifest.webmanifest", "service-worker.js", "icon.svg"):
+        for name in ("index.html", "app.js", "styles.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)
 
 
