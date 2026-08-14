@@ -46,6 +46,23 @@ class FeedbackApiTests(unittest.TestCase):
         with urlopen(self.base_url + "/api/health") as response:
             self.assertEqual(json.load(response)["status"], "ok")
 
+    def test_native_app_origin_can_preflight_feedback_api(self):
+        request = Request(
+            self.base_url + "/api/reports",
+            headers={"Origin": "https://localhost", "Access-Control-Request-Method": "POST"},
+            method="OPTIONS",
+        )
+        with urlopen(request) as response:
+            self.assertEqual(response.status, 204)
+            self.assertEqual(response.headers["Access-Control-Allow-Origin"], "https://localhost")
+            self.assertIn("POST", response.headers["Access-Control-Allow-Methods"])
+
+    def test_unknown_origin_cannot_preflight_feedback_api(self):
+        request = Request(self.base_url + "/api/reports", headers={"Origin": "https://example.com"}, method="OPTIONS")
+        with self.assertRaises(HTTPError) as caught:
+            urlopen(request)
+        self.assertEqual(caught.exception.code, 403)
+
     def test_admin_requires_token_and_records_status_audit(self):
         payload = {
             "facility": {"district": "Bandarban", "facility": [92.2, 22.1, "Review Hospital", "hospital"]},

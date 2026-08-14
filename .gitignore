@@ -1,4 +1,8 @@
 .venv/
+.env.production
+.android-sdk/
+.downloads/
+.tools/
 node_modules/
 data/reports/
 data/raw/*
@@ -14,3 +18,4 @@ __pycache__/
 *.jks
 *.keystore
 android/key.properties
+web/downloads/*.apk

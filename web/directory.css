@@ -2,6 +2,15 @@
   margin-top: 10px;
 }
 
+header nav {
+  display: flex;
+  gap: 8px;
+}
+
+header nav a {
+  text-decoration: none;
+}
+
 #facilityDirectory {
   border-top: 1px solid #dbe8e9;
   margin-top: 16px;

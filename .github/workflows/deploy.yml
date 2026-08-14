@@ -1,0 +1,38 @@
+name: Deploy production
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+concurrency:
+  group: shasthopath-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure deployment key
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/shasthopath_vps
+          chmod 600 ~/.ssh/shasthopath_vps
+          ssh-keyscan -H 31.97.144.127 >> ~/.ssh/known_hosts
+      - name: Upload committed source
+        run: |
+          rsync -az \
+            --exclude '.git' --exclude '.env.production' --exclude 'node_modules' \
+            --exclude '.android-sdk' --exclude '.downloads' --exclude '.tools' \
+            --exclude 'data/reports' --exclude 'web/downloads/*.apk*' \
+            -e 'ssh -i ~/.ssh/shasthopath_vps' \
+            ./ shasthopath@31.97.144.127:/opt/shasthopath/
+      - name: Build APK and deploy service
+        run: ssh -i ~/.ssh/shasthopath_vps shasthopath@31.97.144.127 'cd /opt/shasthopath && bash scripts/deploy_production.sh'

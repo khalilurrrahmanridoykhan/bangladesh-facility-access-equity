@@ -60,8 +60,15 @@ class PublicWebDataTests(unittest.TestCase):
         self.assertIn('hostname.endsWith("basemaps.cartocdn.com")', service_worker)
 
     def test_pwa_core_assets_exist(self):
-        for name in ("index.html", "app.js", "styles.css", "directory.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
+        for name in ("index.html", "download.html", "app.js", "styles.css", "directory.css", "app-download.css", "manifest.webmanifest", "service-worker.js", "icon.svg", "tile-fallback.svg"):
             self.assertGreater((ROOT / "web" / name).stat().st_size, 0)
+
+    def test_android_download_page_and_live_api_bridge_exist(self):
+        download = (ROOT / "web" / "download.html").read_text()
+        javascript = (ROOT / "web" / "app.js").read_text()
+        self.assertIn("downloads/shasthopath-1.0.apk", download)
+        self.assertIn("https://shasthopath.krrkhan.com", javascript)
+        self.assertIn("`${API_BASE}/api/reports`", javascript)
 
     def test_feedback_dialog_and_directions_are_present(self):
         html = (ROOT / "web" / "index.html").read_text()

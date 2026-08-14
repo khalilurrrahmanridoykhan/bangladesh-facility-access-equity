@@ -22,6 +22,7 @@ WEB = ROOT / "web"
 ALLOWED_ISSUES = {"location", "closed", "name", "other"}
 ALLOWED_STATUSES = {"new", "investigating", "accepted", "rejected", "resolved"}
 MAX_BODY_BYTES = 16_384
+NATIVE_APP_ORIGIN = "https://localhost"
 
 
 class AppHandler(SimpleHTTPRequestHandler):
@@ -38,7 +39,19 @@ class AppHandler(SimpleHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
         self.send_header("Permissions-Policy", "geolocation=(self)")
+        if self.headers.get("Origin") == NATIVE_APP_ORIGIN and urlparse(self.path).path.startswith("/api/"):
+            self.send_header("Access-Control-Allow-Origin", NATIVE_APP_ORIGIN)
+            self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS")
+            self.send_header("Vary", "Origin")
         super().end_headers()
+
+    def do_OPTIONS(self):
+        if self.headers.get("Origin") == NATIVE_APP_ORIGIN and urlparse(self.path).path.startswith("/api/"):
+            self.send_response(HTTPStatus.NO_CONTENT)
+            self.end_headers()
+            return
+        self.send_json(HTTPStatus.FORBIDDEN, {"error": "origin_not_allowed"})
 
     def send_json(self, status: HTTPStatus, payload: dict) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode()

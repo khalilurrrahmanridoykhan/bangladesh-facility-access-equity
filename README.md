@@ -1,5 +1,7 @@
 # Bangladesh Facility-Access Equity Pilot
 
+Production: [shasthopath.krrkhan.com](https://shasthopath.krrkhan.com) · [Android download](https://shasthopath.krrkhan.com/download.html)
+
 This pilot estimates combined first-mile walking and road travel time from populated 1 km cells to the nearest mapped health facility. Cells whose nearest reachable facility is more than 120 minutes away are flagged as underserved.
 
 ## Data
@@ -51,6 +53,10 @@ SHASTHOPATH_ADMIN_TOKEN='choose-a-long-random-token' make serve
 ```
 
 Open `http://localhost:8080/admin.html` and enter the same token. Review decisions are recorded as an append-only audit trail in `data/reports/facility-report-status.ndjson`; original public reports are never overwritten.
+
+## Production and Android
+
+The repository includes a Capacitor Android wrapper, a release APK pipeline, an isolated Docker service, and GitHub Actions for tests, Android test artifacts, and VPS deployment. See [PRODUCTION.md](PRODUCTION.md) for server architecture, secret handling, release commands, signing-key backup requirements, and Amazon Appstore preparation.
 
 ## Method
 
