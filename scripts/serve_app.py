@@ -39,7 +39,8 @@ class AppHandler(SimpleHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
         self.send_header("Permissions-Policy", "geolocation=(self)")
-        if self.headers.get("Origin") == NATIVE_APP_ORIGIN and urlparse(self.path).path.startswith("/api/"):
+        cors_path = urlparse(self.path).path
+        if self.headers.get("Origin") == NATIVE_APP_ORIGIN and (cors_path.startswith("/api/") or cors_path == "/app-version.json"):
             self.send_header("Access-Control-Allow-Origin", NATIVE_APP_ORIGIN)
             self.send_header("Access-Control-Allow-Headers", "Authorization, Content-Type")
             self.send_header("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS")

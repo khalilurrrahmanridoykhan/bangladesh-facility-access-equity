@@ -1,0 +1,28 @@
+.update-page header {
+  justify-content: flex-start;
+  gap: 18px;
+}
+
+.back-link {
+  align-items: center;
+  background: #eef8f7;
+  border: 1px solid #c8dddd;
+  border-radius: 999px;
+  color: var(--brand);
+  display: inline-flex;
+  font-weight: 750;
+  gap: 7px;
+  min-height: 44px;
+  padding: 8px 14px;
+  text-decoration: none;
+}
+
+.back-link span:first-child {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.back-link:focus-visible {
+  outline: 3px solid #0f766e44;
+  outline-offset: 2px;
+}

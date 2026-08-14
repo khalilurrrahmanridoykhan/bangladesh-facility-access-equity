@@ -57,6 +57,13 @@ class FeedbackApiTests(unittest.TestCase):
             self.assertEqual(response.headers["Access-Control-Allow-Origin"], "https://localhost")
             self.assertIn("POST", response.headers["Access-Control-Allow-Methods"])
 
+    def test_native_app_can_read_current_version_manifest(self):
+        request = Request(self.base_url + "/app-version.json", headers={"Origin": "https://localhost"})
+        with urlopen(request) as response:
+            self.assertEqual(response.status, 200)
+            self.assertEqual(response.headers["Access-Control-Allow-Origin"], "https://localhost")
+            self.assertIn("version", json.load(response))
+
     def test_unknown_origin_cannot_preflight_feedback_api(self):
         request = Request(self.base_url + "/api/reports", headers={"Origin": "https://example.com"}, method="OPTIONS")
         with self.assertRaises(HTTPError) as caught:
