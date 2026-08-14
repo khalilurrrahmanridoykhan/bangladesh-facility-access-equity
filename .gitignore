@@ -1,0 +1,11 @@
+.venv/
+data/raw/*
+data/processed/*
+outputs/*
+!data/raw/.gitkeep
+!data/raw/source-manifest.json
+!data/processed/.gitkeep
+!outputs/.gitkeep
+*.osrm*
+__pycache__/
+.DS_Store
